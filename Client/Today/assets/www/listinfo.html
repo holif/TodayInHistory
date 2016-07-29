@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<title>历史上的今天</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+	<link rel="stylesheet" href="css/mui.min.css">
+	<script type="text/javascript" charset="utf-8" src="js/mui.min.js"></script>
+	<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+	<script type="text/javascript" charset="utf-8" src="js/cordova.js"></script>
+	<script type="text/javascript" charset="utf-8" src="js/jquery-1.9.1.min.js"></script>	
+	<style>
+		html,
+		body {
+			background-color: #efeff4;
+		}
+		.mui-table h4,.mui-table h5,.mui-table .mui-h5,.mui-table .mui-h6,.mui-table p{
+			margin-top: 0;
+		}
+		.mui-table h4{
+			line-height: 21px;
+			font-weight: 500;
+		}
+		.mui-table .oa-icon{
+			position: absolute;
+			right:0;
+			bottom: 0;
+		}
+		.mui-table .oa-icon-star-filled{
+			color:#f14e41;
+		}
+		a{color:#000;}
+		a:link {color: #000; text-decoration:none;} 
+		a:active:{color: #000; } 
+		a:visited {color:#000;text-decoration:none;} 
+		a:hover {color: #000; text-decoration:none;}    
+		#button{margin-right:10px;}		
+	</style>
+	<script>
+		mui.init();
+	</script>
+</head>
+<body>
+<script>
+window.onload=setinfo;
+//获取传来的参数
+function getArgs() { 
+    var args = {};
+    var query = location.search.substring(1);
+    var pairs = query.split("&"); 
+     for(var i = 0; i < pairs.length; i++) {
+            var pos = pairs[i].indexOf('=');
+            if (pos == -1) continue;
+                var argname = pairs[i].substring(0,pos);
+                var value = pairs[i].substring(pos+1);
+                value = decodeURIComponent(value);
+                args[argname] = value;
+        }
+    return args;
+}
+//设置请求参数 发送请求
+function setinfo(){
+ 	var str =getArgs();
+	var month = str['month'];
+	var day = str['day'];
+	document.getElementById("muititle").innerHTML = month+"月"+day+"日";
+	asyncrequest(month,day);
+}
+function asyncrequest(month,day){
+	var filename = month + day;
+	$.ajax({
+		type: "GET",
+        async: false,
+		//请修改url信息
+        url: "http://YourDomain/getinfo.php?month="+month+"&day="+day,
+		crossDomain: true,
+        dataType: "jsonp",
+        timeout: 5000,
+        jsonp: "callback",
+        success: function(data){           
+			var parent = $(".mui-table-view");
+	        var result = data.result;
+			var len = eval(result).length;
+	        var day = new Date(); 
+			for(i=0;i<len;i++){
+				var today = day.getFullYear() - data.result[i].year;
+				var info ='<li class="mui-table-view-cell"><div class="mui-table"><div class="mui-table-cell mui-col-xs-10"><h4 class="mui-ellipsis"><a href="./detail.html?title=' + data.result[i].title + '&pic=' + data.result[i].pic + '&des=' + data.result[i].des + '">'+data.result[i].title+'</a></h4><h5>距今：'+ today +'年</h5><p class="mui-h6 mui-ellipsis">'+data.result[i].des+'</p></div><div class="mui-table-cell mui-col-xs-2 mui-text-right"><span class="mui-h5">'+data.result[i].year+'</span></div></div></li>';
+				parent.append(info);
+			}
+        },
+        error: function(x,e){
+		}
+    });
+}	
+</script>
+<header class="mui-bar mui-bar-nav">
+    <h1 class="mui-title" id="muititle">历史上的今天</h1>
+</header>
+<div class="mui-content" id="listinfo" style="display: none; ">
+	 <ul class="mui-table-view mui-table-view-striped mui-table-view-condensed">
+	 </ul>
+</div>
+</body>
+</html>
