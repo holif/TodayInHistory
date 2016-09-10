@@ -8,4 +8,4 @@ APP是根据输入的日期返回历史上曾在今天发生的重大事件，�
 
 
 <br /><br /><br /><br />
-具体开发过程可参见我的博客<a href="http://blog.csdn.net/baalhuo/article/details/51757905">Phonegap(cordova)小Dome</a>
+具体开发过程见我的博客<a href="http://blog.csdn.net/baalhuo/article/details/51757905">Phonegap(cordova)小Dome</a>
